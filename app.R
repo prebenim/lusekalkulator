@@ -13,8 +13,8 @@ ui <- fluidPage(
             textInput("tid", "6-sifret ukenummer (eller 0)", "0"),
             tags$br("For å endre størrelsen på smittepresset, må lokalitetsnummeret først settes til 0. Smittepress tar verdier mellom 0 og 22. For eksempel 14.7 som tilsvarer 90 persentilen for alle ukentlige smittepressverdier fra aktive lokaliteter i årene 2012 til og  med 2015."),
             numericInput("sm", "Smittepress", 15, min = 0, max = 22),
-            selectInput("hele", "merdvis behandling eller hele lokaliteten:", c("merdvis" = "Merdvis", "hele anlegget" = "Hele"), "Merdvis") 
-           
+            selectInput("hele", "merdvis behandling eller hele lokaliteten:", c("merdvis" = "Merdvis", "hele anlegget" = "Hele"), "Merdvis"), 
+            tags$br(" ")
         )
         ,
         mainPanel(
