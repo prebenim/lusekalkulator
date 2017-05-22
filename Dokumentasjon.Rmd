@@ -1,0 +1,19 @@
+---
+title: "Dokumentasjon"
+author: "Lars Qviller"
+date: "19 januar 2017"
+output: html_document
+---
+
+
+## Kart over ukentlig smittepress 
+
+
+
+Veterinærinstituttet har utviklet en modell som viser forventet produksjon av preadulte lakselus langs kysten. Modellen baserer seg på antall reproduserende hunnlus og temperatur i de enkelte lokalitetene, rapportert av næringen selv. Informasjonen brukes, sammen med kunnskap om lakselusas biologi til å finne reproduksjon, utviklingsrater og overlevelse av egg og larver fra hvert anlegg. Dermed kan vi beregne en forventet utvikling av preadulte lakselus opptil to uker fram i tid. Denne verdien utgjør et lokalt smittepress som avtar med økende avstand fra en oppdrettslokalitet etter gitte funksjoner. For et gitt punkt langs kysten kan vi dermed beregne smittepresset for preadulte lakselus ved å legge sammen smittepress fra alle anleggene i nabolaget. 
+Smittepresskartene representerer et varsel for forventet relativ fremvekst av nye lus i preadulte stadier, der overlevelse og tiden til fremveksten er temperaturavhengig. Utvikling fra forrige generasjons hunnlus til nye preadult lakselus er temperaturavhengig. Når temperaturen i vannet er mindre enn 11 grader vil tiden være mer enn tre uker (figur 1). Hvis temperaturen i havet forventes å forandre seg lite i et tidsrom på to uker vil det publiserte smittevarselet være nokså presist to uker fram i tid.
+Fargeskalaen som benyttes i kartet varier fra gul (lavt smittepress) til rødt (høyt smittepress). Grensene for ulike prosentiler (10 %, 20 %, 30 % 40 %, 50 %, 60 %, 70 %, 80 % og 90 % prosentilene) er vist i figur 2.
+
+ ![Figur 2, skala for smittepress](Rplot2.jpg)
+ 
+ > Siden er under arbeid og figurene utbedres etterhvert
