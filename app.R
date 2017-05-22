@@ -31,16 +31,7 @@ ui <- fluidPage(
       
     ),
     mainPanel(
-      div(id="mainblock",
-        tableOutput(outputId = "table.output"),
-        textOutput("text"),
-        tags$br(""),
-        plotOutput("plot1"),
-        plotOutput("plot2"),
-        plotOutput("plot3"),
-        plotOutput("plot4")
-      )
-        
+    	uiOutput("mainblock")
     )
   )
 )
@@ -58,7 +49,6 @@ d0 <- read.csv("./lusedata.csv", header = T, dec = ",", sep = ";")
 dAlle <- read.csv("./MobileTotaltFra2012.txt", header = T, dec = ",", sep = "\t")
 
 tail(names(dAlle),3)
-               #
 
 countHele <- function(MerderM1, LokM1, VektMerd, LM1, ReFis, LnSmP){
   LogAdd <- 0.1
@@ -88,7 +78,6 @@ zeroMerd <- function(MerderM1, VektMerd, LM1,  ReFis, LnSmP){
   return(ze)
 }
 
-
 convData <- function(value){
 	outvalue <- as.numeric(sub(",", ".", value, fixed = TRUE))
   return(outvalue)
@@ -97,6 +86,46 @@ convData <- function(value){
 
 server <- function(input, output){
   
+
+
+	drawInfo <- function(output, mydata) {
+		output$mainblock <- renderUI({
+		  output$dt.output <- renderTable({mydata})
+		  output$text <- renderText(paste("Smittepresset på lokalitet ", input$loknr, " denne uken (uke ", mytid(), ") er ", round(log(d[as.character(input$loknr),1] + 1),2), ". Til sammenligning er gjennomsnittlig smittepress for alle lokaliteter i Norge ", round(mean(log(d[,1] + 1)),2), " og varierer mellom ", round(quantile(log(d[,1] + 1), 0.05),2), "(5% prosentil) og ", round(quantile(log(d[,1] + 1), 0.95),2), "(95% prosentil).")) 
+		  output$plot1 <- renderPlot({
+		    inndata <- mydata
+		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData =  inndata, plotnr = 1, hele = myhele)
+		  })
+		  
+		  output$plot2 <- renderPlot({          
+		    inndata <- mydata
+		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 2, hele =  myhele)
+		  })
+		  
+		  output$plot3 <- renderPlot({          
+		    inndata <- mydata
+		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 3, hele =  myhele)
+		  })
+		  
+		  output$plot4 <- renderPlot({          
+		    inndata <- mydata
+		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 4, hele =  myhele)
+		  })
+		  div(id="mainblock",
+		    tableOutput(outputId = "table.output"),
+		    textOutput("text"),
+		    tags$br(""),
+		    plotOutput("plot1"),
+		    plotOutput("plot2"),
+		    plotOutput("plot3"),
+		    plotOutput("plot4")
+		  )
+	  })
+	}
+	
+	
+
+
   myhele <- "Merdvis"
   
   mytid <- reactive({
@@ -125,10 +154,11 @@ server <- function(input, output){
     if (is.null(inFile)){
       tbl <- d0
     }else{
-      
       tbl <- read.csv(inFile$datapath, header = T, sep = ";", dec = ",") #, header=input$header, sep=input$sep,  dec = input$dec)
     }
+
     mydata(tbl)
+    drawInfo(output, mydata())
   })
   
   observeEvent({
@@ -201,7 +231,6 @@ server <- function(input, output){
     input$merd16_stubborn
     },{
       
-      
     if (input$merddataradio == "manual"){
       newrow <- c(convData(input$merd1_loop),convData(input$merd1_weight),convData(input$merd1_fish),convData(input$merd1_stubborn))
       newdata = matrix(newrow, nrow=1, ncol=4, byrow = TRUE) 
@@ -250,6 +279,7 @@ server <- function(input, output){
         newdata <- rbind(newdata, c(convData(input$merd16_loop), convData(input$merd16_weight), convData(input$merd16_fish), convData(input$merd16_stubborn)))
       }            
       mydata(newdata)
+      drawInfo(output, mydata())
     }
   })
   
@@ -386,28 +416,11 @@ server <- function(input, output){
     }
   }
 
+	observeEvent(input$calculate, {
+	  drawInfo(output, mydata())
+	})
   
-  output$table.output <- renderTable({mydata()})
-  output$text <- renderText(paste("Smittepresset på lokalitet ", input$loknr, " denne uken (uke ", substr(colnames(d)[1],2,7), ") er ", round(log(d[as.character(input$loknr),1] + 1),2), ". Til sammenligning er gjennomsnittlig smittepress for alle lokaliteter i Norge ", round(mean(log(d[,1] + 1)),2), " og varierer mellom ", round(quantile(log(d[,1] + 1), 0.05),2), "(5% prosentil) og ", round(quantile(log(d[,1] + 1), 0.95),2), "(95% prosentil).")) 
-  output$plot1 <- renderPlot({
-    inndata <- mydata()
-    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData =  inndata, plotnr = 1, hele = myhele)
-  })
-  
-  output$plot2 <- renderPlot({          
-    inndata <- mydata()
-    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 2, hele =  myhele)
-  })
-  
-  output$plot3 <- renderPlot({          
-    inndata <- mydata()
-    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 3, hele =  myhele)
-  })
-  
-  output$plot4 <- renderPlot({          
-    inndata <- mydata()
-    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 4, hele =  myhele)
-  })
+#  drawInfo
   
 }
 
