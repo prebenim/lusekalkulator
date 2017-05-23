@@ -15,19 +15,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       
-      htmlTemplate("form.html")
-      
-      #fileInput('file1', 'Last opp csv fil (beskrivelse på hvit område)',
-      #          accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv'))
-      #,
-      #tags$hr(),
-      #tags$br("Skriv inn lokalitetsnummer for å få tak i smittepress"),
-      #textInput("loknr", "5-sifret lokalitetsnummer (eller 0)", "0"),
-      #tags$br("Skriv inn enten år og ukenummer eller bruk 0 for nåværende uke. Eksempel uke 1 i 2016: 201601"),
-      #textInput("tid", "6-sifret ukenummer (eller 0)", "0"),
-      #tags$br("For å endre størrelsen på smittepresset, må lokalitetsnummeret først settes til 0. Smittepress tar verdier mellom 0 og 22. For eksempel 14.7 som tilsvarer 90 persentilen for alle ukentlige smittepressverdier fra aktive lokaliteter i årene 2012 til og  med 2015."),
-      #numericInput("sm", "Smittepress", 15, min = 0, max = 22),
-      #selectInput("hele", "merdvis behandling eller hele lokaliteten:", c("merdvis" = "Merdvis", "hele anlegget" = "Hele"), "Merdvis") 
+      htmlTemplate("form.html")      
       
     ),
     mainPanel(
@@ -86,30 +74,37 @@ convData <- function(value){
 
 server <- function(input, output){
   
-
-
 	drawInfo <- function(output, mydata) {
 		output$mainblock <- renderUI({
+		  if (input$smradio == "auto") {
+  		  lok <- input$loknr
+		  } else {
+		  	lok <- 0
+  		}
 		  output$dt.output <- renderTable({mydata})
-		  output$text <- renderText(paste("Smittepresset på lokalitet ", input$loknr, " denne uken (uke ", mytid(), ") er ", round(log(d[as.character(input$loknr),1] + 1),2), ". Til sammenligning er gjennomsnittlig smittepress for alle lokaliteter i Norge ", round(mean(log(d[,1] + 1)),2), " og varierer mellom ", round(quantile(log(d[,1] + 1), 0.05),2), "(5% prosentil) og ", round(quantile(log(d[,1] + 1), 0.95),2), "(95% prosentil).")) 
+		  if (lok == 0) {
+			  output$text <- renderText(" ") 
+			} else {
+				output$text <- renderText(paste("Smittepresset på lokalitet ", lok, " uke ", mytid(), " er ", round(log(dAlle[as.character(lok),paste("X", mytid(), sep = "")] + 1),2), ". Til sammenligning var gjennomsnittlig smittepress for alle lokaliteter i Norge ", round(mean(log(dAlle[,paste("X", mytid(), sep = "")] + 1)),2), " og varierte mellom ", round(quantile(log(dAlle[,paste("X", mytid(), sep = "")] + 1), 0.05),2), "(5% prosentil) og ", round(quantile(log(dAlle[,paste("X", mytid(), sep = "")] + 1), 0.95),2), "(95% prosentil)."))
+			}
 		  output$plot1 <- renderPlot({
 		    inndata <- mydata
-		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData =  inndata, plotnr = 1, hele = myhele)
+		    plotLok(loknr = lok, valgtSm = input$sm, tid = mytid(), innlestData =  inndata, plotnr = 1, hele = myhele, merd = input$merdradio)
 		  })
 		  
 		  output$plot2 <- renderPlot({          
 		    inndata <- mydata
-		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 2, hele =  myhele)
+		    plotLok(loknr = lok, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 2, hele =  myhele, merd = input$merdradio)
 		  })
 		  
 		  output$plot3 <- renderPlot({          
 		    inndata <- mydata
-		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 3, hele =  myhele)
+		    plotLok(loknr = lok, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 3, hele =  myhele, merd = input$merdradio)
 		  })
 		  
 		  output$plot4 <- renderPlot({          
 		    inndata <- mydata
-		    plotLok(loknr = input$loknr, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 4, hele =  myhele)
+		    plotLok(loknr = lok, valgtSm = input$sm, tid = mytid(), innlestData = inndata, plotnr = 4, hele =  myhele, merd = input$merdradio)
 		  })
 		  div(id="mainblock",
 		    tableOutput(outputId = "table.output"),
@@ -123,9 +118,6 @@ server <- function(input, output){
 	  })
 	}
 	
-	
-
-
   myhele <- "Merdvis"
   
   mytid <- reactive({
@@ -144,10 +136,7 @@ server <- function(input, output){
     
   
   mydata <- reactiveVal()
-  #newdata = matrix(c(0, 0, 0, 0), nrow=1, ncol=4) 
-  #colnames(newdata) <- c("Mobile.lus.pr.fisk.merd","Vekt.merd","Rensefisk.merd","Fastsittende.merd")
-#  mydata(d0)
-  
+    
   observeEvent(input$file1,{ 
     inFile <- input$file1
     
@@ -292,10 +281,10 @@ server <- function(input, output){
     }
   }
   
-  plotLok <- function(loknr, valgtSm, tid, innlestData, plotnr, hele){
+  plotLok <- function(loknr, valgtSm, tid, innlestData, plotnr, hele, merd){
     if(loknr == "0"){
       LnSmP <- valgtSm
-    }   else {
+    } else {
       if(as.character(loknr) %in% rownames(d)){
         if(tid == 0){
           LnSmP  <- log(d[as.character(loknr),1] + 1)
@@ -312,11 +301,11 @@ server <- function(input, output){
     LM1 <- innlestData[,4]
     LokM1 <- mean(MerderM1) 
     antMerder <- length(MerderM1)
-    HeleMerd <- switch(myhele, 
-                       "Hele" = TRUE, 
-                       "Merdvis" = FALSE) 
-    
-    
+   	HeleMerd <- TRUE
+    if (merd == "merdvis") {
+   		HeleMerd <- FALSE
+    }
+        
     if(HeleMerd == TRUE){
       yCount <- countHele(MerderM1 = MerderM1, LokM1 = LokM1, VektMerd = VektMerd, LM1 = LM1, ReFis = ReFis, LnSmP = LnSmP)
       yZero <- zeroHele(MerderM1 = MerderM1, LokM1 = LokM1, VektMerd = VektMerd, LM1 = LM1, ReFis = ReFis, LnSmP = LnSmP)
@@ -419,8 +408,6 @@ server <- function(input, output){
 	observeEvent(input$calculate, {
 	  drawInfo(output, mydata())
 	})
-  
-#  drawInfo
   
 }
 
