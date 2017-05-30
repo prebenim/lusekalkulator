@@ -381,10 +381,10 @@ server <- function(input, output){
     p50U3 <- 100*plogis(ParameterHunnlusSann[1] + ParameterHunnlusSann[2]*MerderUke3T)
     p75U3 <- 100*plogis(ParameterHunnlusSann[1] + ParameterHunnlusSann[2]*MUke3lowT)
     p25U3 <- 100*plogis(ParameterHunnlusSann[1] + ParameterHunnlusSann[2]*MUke3upT)
-    par(mfrow = c(1,4))
+    par(mfrow = c(1,4), mar = c(5,5,4,1))
     if(antMerder > (plotnr - 1)*4){
       i <- (plotnr - 1)*4 + 1
-      plot (xtid, pdat[c(1,2,5,8),i], type = 'l', ylim = c(Min,Max), lwd = 3, col = "red", ylab = "Lus.pr.fisk.merd", xlab = "uker framover", main = paste("Merd",  i, sep = " "), axes = F, cex.lab = 1.8, cex.main = 1.8)
+      plot (xtid, pdat[c(1,2,5,8),i], type = 'l', ylim = c(Min,Max), lwd = 3, col = "red", ylab = "Lus pr fisk pr merd", xlab = "uker framover", main = paste("Merd",  i, sep = " "), axes = F, cex.lab = 1.8, cex.main = 1.8)
       axis(1, c(0,1,2,3), c(0,1,2,3))
       axis(2)
       lines(xtid[-1], pdat[c(3,6,9),i], type = 'l')
