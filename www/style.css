@@ -1,0 +1,107 @@
+.bottom-column
+{
+    float: none;
+    display: table-cell;
+    vertical-align: bottom;
+}
+
+.add-space-top {
+    margin-top: 10px;
+}
+
+.tooltip-inner {
+  white-space:nowrap;
+  max-width:none;
+}
+
+
+.container-fluid {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.title-font {
+  font-family: "futura-pt", serif;
+  font-weight: 500;
+  font-size: 1.65rem;
+}
+
+.label-font {
+  font-family: "source-serif-pro", serif;
+  font-size: 1.25rem;
+}
+
+.btn-primary {
+  font-family: "futura-pt", serif;
+  font-size: 1.75rem;  
+}
+
+.btn-secondary {
+  background-color: #003344;
+  color: #ffffff;
+}
+
+.btn.btn-secondary {
+   border-radius: 0px;
+}
+
+.btn-secondary:focus, .btn-secondary:hover {
+    background-color: #6BB984;
+    color: #ffffff;
+}
+
+.bg-dark {
+    background-color: #003344;
+    color: #ffffff;
+}
+
+.logo {
+  max-height: 50px;
+  max-width: 280px;  
+}
+
+.bg-dark a {
+  color: #ffffff;
+}
+
+.nav {
+  font-family: "futura-pt";
+  font-weight: 500;
+}
+
+.nav .bg, .bg1, .bg2 {
+  display: inline-block;
+  vertical-align: middle;
+  padding-bottom: 10px;
+}
+
+.bg {
+  width: 20%;
+  padding-left: 10px;
+}
+
+
+.bg1 {
+  width: 69%;
+}
+
+.bg2 {
+  width: 10%;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.bg a, .bg1 a, .bg2 a {
+  color: white;
+  font-size: 1.75rem;
+}
+
+.modal {
+  display: none;
+}
+
+.modal-dialog {
+  font-family: "futura-pt";
+  font-size: 1.75rem;
+  line-height: 1.6;
+}

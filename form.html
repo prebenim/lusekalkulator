@@ -1,0 +1,635 @@
+<span class="title-font"><b>Regn ut forventet utvikling av lakselus per merd</b></span>
+
+
+<div id="smradio" class="form-group shiny-input-radiogroup shiny-input-container">
+	<label class="label-font" for="div-sm-radio">Smittepress</label>
+	<div class="shiny-options-group">
+	  <div class="radio">
+	    <label>
+	      <input type="radio" name="smradio" value="auto"/>
+	      <span class="label-font">Skriv inn 5-sifret lokalitetsnummer og få smittepress automatisk</span>
+	    </label>
+	  </div>
+	  <div id="loknrblock" class="row">
+	  	<div class="col-sm-6">
+	    	<input id="loknr" type="text" class="form-control" value="0" />
+	  	</div>
+	  </div>
+	  <div class="radio">
+	    <label>
+	      <input type="radio" name="smradio" value="manual" checked="checked"/>
+	      <span class="label-font">Velg smittepress manuelt (et tall mellom 0 og 22)</span>
+	    </label>
+	  </div>
+	  <div id="smblock" class="row">
+	  	<div class="col-sm-5">
+	    	<input id="sm" type="number" class="form-control" value="15" min="0" max="22"/>
+	  	</div>
+	  </div>
+	</div>
+</div>
+
+
+<div id="startblock" class="form-group shiny-input-container">
+	<label for="beregningen">Start beregningen fra</label>
+	<div class="row">
+		<div class="col-sm-6">
+			<span class="label-font">År</span>
+			<input id="year" type="number" class="form-control" value="2017" min="1900" max="2030"/>
+		</div>
+		<div class="col-sm-6">
+			<span class="label-font">Uke (1-52)</span>
+			<input id="week" type="number" class="form-control" value="1" min="0" max="52"/>
+		</div>
+	</div>
+</div>
+
+<div id="merdradio" class="form-group shiny-input-radiogroup shiny-input-container">
+	<label class="label-font" for="div-merd-radio">Behandlingsstrategi mot lus på ditt anlegg</label>
+	<div class="shiny-options-group">
+	  <div class="radio">
+	    <label>
+	      <input type="radio" name="merdradio" value="hele" checked="checked"/>
+	      <span class="label-font">Hele lokaliteten</span>
+	    </label>
+	  </div>
+	  <div class="radio">
+	    <label>
+	      <input type="radio" name="merdradio" value="merdvis"/>
+	      <span class="label-font">Merdvis</span>
+	    </label>
+	  </div>
+	</div>
+</div>
+
+
+
+<div id="merddataradio" class="form-group shiny-input-radiogroup shiny-input-container">
+	<label class="label-font" for="div-merddata-radio">Merddata for ditt anlegg</label>
+	<div class="shiny-options-group">
+	  <div class="radio">
+	    <label>
+	      <input type="radio" name="merddataradio" value="csv" checked="checked"/>
+	      <span class="label-font">Last opp tabell i csv-format (<span class="text-success">last ned eksempel.csv</span>)</span>
+	    </label>
+	  </div>
+	  <div id="fileuploadblock">
+	    <div class="input-group">
+	      <label class="input-group-btn">
+	        <span class="btn btn-success btn-file">
+	          Velg fil
+	          <input id="file1" name="file1" type="file" style="display: none;" accept="text/csv,text/comma-separated-values,text/plain,.csv"/>
+	        </span>
+	      </label>
+	      <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+	    </div>
+	    <div id="file1_progress" class="progress progress-striped active shiny-file-input-progress">
+	      <div class="progress-bar"></div>
+	    </div>
+	   </div>
+	  <div class="radio">
+	    <label>
+	      <input type="radio" name="merddataradio" value="manual"/>
+	      <span class="label-font">Legg inn data manuelt</span>
+	    </label>
+	  </div>
+	  <div  id="manualdata">
+		  <div id="merd1" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 1</b><span id="merd1x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd1_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt per fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd1_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd1_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd1_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd1_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd1_stubborn" data-nonempty="">{}</script>
+		            </div>				
+				</div>
+		  </div>
+		  <div id="merd2" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 2</b><span id="merd2x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd2_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd2_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd2_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd2_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd2_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd2_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd3" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 3</b><span id="merd3x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd3_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd3_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd3_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd3_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd3_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd3_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd4" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 4</b><span id="merd4x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd4_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd4_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd4_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd4_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd4_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd4_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd5" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 5</b><span id="merd5x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd5_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd5_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd5_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd5_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd5_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd5_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd6" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 6</b><span id="merd6x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd6_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd6_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd6_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd6_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd6_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd6_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd7" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 7</b><span id="merd7x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd7_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd7_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd7_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd7_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd7_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd7_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd8" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 8</b><span id="merd8x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd8_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd8_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd8_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd8_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd8_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd8_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd9" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 9</b><span id="merd9x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd9_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd9_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd9_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd9_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd9_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd9_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd10" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 10</b><span id="merd10x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd10_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd10_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd10_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd10_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd10_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd10_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd11" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 11</b><span id="merd11x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd11_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd11_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd11_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd11_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd11_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd11_stubborn" data-nonempty="">{}</script>
+		            </div>				
+				</div>
+		  </div>
+		  <div id="merd12" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 12</b><span id="merd12x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd12_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd12_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd12_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd12_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd12_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd12_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd13" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 13</b><span id="merd13x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd13_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd13_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd13_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd13_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd13_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd13_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd14" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 14</b><span id="merd14x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd14_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd14_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd14_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd14_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd14_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd14_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd15" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 15</b><span id="merd15x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd15_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd15_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd15_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd15_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd15_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd15_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <div id="merd16" class="row add-space-top" class="form-group">
+				<div class="col-sm-12">
+		  			<span class="label-font"><b>Merd 16</b><span id="merd16x" class="remove-icon glyphicon glyphicon-remove-circle"></span></span>
+		  		</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Lus</span><span data-toggle="tooltip" data-placement="top" title="Summen av hunnlus og andre mobile lus pr. fisk" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd16_loop" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Vekt i kg</span><span data-toggle="tooltip" data-placement="top" title="Gjennomsnittsvekt pr. fisk i kilo"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<input id="merd16_weight" type="text" value="0" class="form-control"/>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Rensefisk</span><span data-toggle="tooltip" data-placement="top" title="Rensefisk benyttes (Ja), hvis ikke (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd16_fish" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd16_fish" data-nonempty="">{}</script>
+		            </div>
+				</div>
+				<div class="col-sm-3 bottom-column">
+					<span class="label-font">Fastsittende</span><span data-toggle="tooltip" data-placement="top" title="Observasjon av fastsittende lus i merden forrige uke (Ja) ellers (Nei)"  class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+		            <div>
+		              <select id="merd16_stubborn" class="form-control">
+		                <option value="1">Ja</option>
+						<option value="0" selected>Nei</option>
+					  </select>
+		              <script type="application/json" data-for="merd16_stubborn" data-nonempty="">{}</script>
+		            </div>
+				</div>
+		  </div>
+		  <button id="addmerd" type="button" class="btn btn-success action-button add-space-top">Legg til merd</button>
+	   </div>
+	</div>
+</div>
+
+
+<div>
+	<button id="calculate" name="calculate" type="submit" class="btn btn-primary btn-lg">
+	  Beregn utvikling
+	</button>
+</div>
