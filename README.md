@@ -44,6 +44,27 @@ The R Shiny implementation is currently non-functional due to:
 | År | Year |
 | Vekt | Weight |
 
-## Transition to Python
+## Python Implementation
 
-We are migrating this application to a modern Python framework (Streamlit) to improve maintainability, portability, and to fix the existing bugs.
+The application has been migrated to a modern Python stack to improve maintainability and resolve issues with the original implementation.
+
+### Tech Stack
+- **Framework**: [Streamlit](https://streamlit.io/) for the web interface.
+- **Mathematics**: `NumPy` and `SciPy` for statistical modeling and Monte Carlo simulations.
+- **Data Handling**: `Pandas` for CSV processing and internal data structures.
+- **Visualization**: `Matplotlib` for generating cage-wise development plots.
+
+### Structure
+- `logic.py`: Contains the core mathematical models (`count_hele`, `zero_merd`, etc.) and the simulation engine. It implements the Zero-Inflated Negative Binomial logic.
+- `main.py`: The entry point for the Streamlit application. Manages user inputs, file uploads, and coordinates the simulation and visualization.
+- `requirements.txt`: Lists all necessary Python packages.
+
+### How to Run
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Start the application:
+   ```bash
+   streamlit run main.py
+   ```
