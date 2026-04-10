@@ -1,64 +1,44 @@
 # Lusekalkulator (Lice Calculator)
 
-A tool to predict the development of salmon lice (*Lepeophtheirus salmonis*) in salmon farms. It uses a statistical model based on historical data (2012–2014) from various locations along the Norwegian coast.
+A tool to predict the development of salmon lice (*Lepeophtheirus salmonis*) in salmon farms.
 
-## Overview
+## Model Overview
 
-The application forecasts the number of adult female lice and other mobile stages of lice per fish for the next one, two, and three weeks. It also calculates the probability of exceeding the regulatory limit of 0.5 adult female lice per fish.
+The application has been updated to use the latest **Stige et al. (2024)** joint life-cycle model. This state-of-the-art model replaces the previous ZINB approach and provides more accurate predictions by simultaneously modeling three distinct lice stages.
 
-The model is a **Zero-Inflated Negative Binomial (ZINB)** model, accounting for the fact that many observations have zero lice and the remaining follow a negative binomial distribution.
+### Key Features
+- **Joint Stage Modeling**: Simultaneously predicts Sessile (Chalimus), Other Motile, and Adult Female lice.
+- **Environmental Factors**: Incorporates sea temperature, fish weight, and fish abundance (thousands per cage).
+- **Biological Interactions**: Accounts for the presence of Wrasse (cleaner fish) and their effect on adult female mortality.
+- **Lagged Infection Pressure**: Uses a temperature-dependent development lag ($dT$) to accurately account for the time between larval production at neighboring farms and settlement as sessile lice on the target farm.
+- **Uncertainty Estimation**: Employs Monte Carlo simulations (1,000 runs) to calculate the probability of exceeding the regulatory limit of 0.5 adult female lice per fish.
 
-## Original R Shiny Implementation
+## Input Variables
 
-The original project was built using the R Shiny framework.
-
-### Key Components:
-- `app.R`: Main Shiny application file containing UI and Server logic.
-- `form.html` & `header.html`: HTML templates for the UI.
-- `www/`: Static assets (CSS, JS, images).
-- `Dokumentasjon.Rmd`: Documentation of the model and its background.
-
-### Current Status: Broken
-The R Shiny implementation is currently non-functional due to:
-1. **Missing Data Files**: Several required files are missing from the repository:
-   - `MobileTotaltFra2012SisteUker.txt`
-   - `lusedata.csv`
-   - `MobileTotaltFra2012.txt`
-2. **Hardcoded Logic**: The application relies on specific local file structures and Norwegian naming conventions.
-3. **Inconsistencies**: There appear to be some bugs in the R code, such as indexing mismatches in parameter arrays.
-
-## Norwegian to English Dictionary
-
-| Norwegian | English |
-| --- | --- |
-| Lus | Lice |
-| Hunnlus | Female lice |
-| Merd | Fish cage / Pen |
-| Lokalitet | Location / Site |
-| Rensefisk | Cleaner fish |
-| Smittepress | Infection pressure |
-| Fastsittende | Attached (lice stage) |
-| Mobile stadier | Mobile stages (lice) |
-| Kjønnsmodne | Sexually mature |
-| Uke | Week |
-| År | Year |
-| Vekt | Weight |
+| Variable | Description | Units |
+| --- | --- | --- |
+| Temperature | Sea surface temperature | °C |
+| Sessile Lice | Attached stages (Chalimus) | lice per fish |
+| Other Mobile | Pre-adult and non-mature mobile stages | lice per fish |
+| Adult Female | Sexually mature female lice | lice per fish |
+| Fish Weight | Mean weight of fish in the cage | kg |
+| Fish Count | Number of fish in thousands | 1,000s |
+| Wrasse | Presence of wrasse cleaner fish | Yes/No |
+| Infection Pressure | Larval pressure from neighboring farms | Index (P) |
 
 ## Python Implementation
-
-The application has been migrated to a modern Python stack to improve maintainability and resolve issues with the original implementation.
 
 ### Tech Stack
 - **Framework**: [Streamlit](https://streamlit.io/) for the web interface.
 - **Mathematics**: `NumPy` and `SciPy` for statistical modeling and Monte Carlo simulations.
-- **Data Handling**: `Pandas` for CSV processing and internal data structures.
-- **Visualization**: `Matplotlib` for generating cage-wise development plots.
+- **Data Handling**: `Pandas` for data processing.
+- **Visualization**: `Matplotlib` for generating development plots with uncertainty intervals.
+- **API Integration**: Robust client for the Institute of Marine Research (HI/IMR) API to fetch real-time infection pressure data.
 
 ### Structure
-- `logic.py`: Contains the core mathematical models (`count_hele`, `zero_merd`, etc.) and the simulation engine. It implements the Zero-Inflated Negative Binomial logic.
-- `imr_api.py`: Robust client for the Institute of Marine Research (HI/IMR) API. Includes coordinate parsing, UTC-aware week conversion, and error handling.
-- `main.py`: The entry point for the Streamlit application. Manages user inputs, coordinates cached API data fetching, simulation, and visualization.
-- `requirements.txt`: Lists all necessary Python packages.
+- `logic.py`: Implements the Stige et al. (2024) mathematical model and simulation engine.
+- `imr_api.py`: API client for fetching external infestation pressure data.
+- `main.py`: Streamlit entry point, managing UI, inputs, and coordination between the API and model.
 
 ### How to Run
 1. Install dependencies:
