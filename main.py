@@ -17,7 +17,7 @@ T = {
     "pressure_val": "Infection Pressure Value",
     "start_from": "Start calculation from",
     "year": "Year",
-    "week": "Week (1-52)",
+    "week": "Week (1-53)",
     "strategy": "Treatment Strategy",
     "whole_site": "Whole Site",
     "merd_wise": "Cage-wise (Merdvis)",
@@ -41,6 +41,14 @@ T = {
 def load_hi_config():
     return get_initial_config()
 
+@st.cache_data
+def cached_find_location_id(selected_farm):
+    return find_location_id(selected_farm)
+
+@st.cache_data
+def cached_get_infection_pressure(lat, lon, year):
+    return get_infection_pressure(lat, lon, year)
+
 def main():
     st.title(T["title"])
 
@@ -58,7 +66,12 @@ def main():
     with st.sidebar:
         st.header("Settings")
 
-        sm_mode = st.radio(T["infection_pressure"], ["auto", "manual"], index=0)
+        sm_mode = st.radio(
+            T["infection_pressure"],
+            ["auto", "manual"],
+            index=0,
+            format_func=lambda x: T["auto_pressure"] if x == "auto" else T["manual_pressure"]
+        )
 
         selected_farm = None
         if sm_mode == "auto":
@@ -70,16 +83,19 @@ def main():
 
         auto_ln_smp = None
         if sm_mode == "auto" and selected_farm:
-            internal_id, wkt = find_location_id(selected_farm)
+            internal_id, wkt = cached_find_location_id(selected_farm)
             if internal_id:
                 lat, lon = parse_wkt_point(wkt)
-                ts = get_infection_pressure(lat, lon, year)
-                pressure = get_pressure_for_week(ts, week)
-                if pressure is not None:
-                    auto_ln_smp = np.log(pressure + 1)
-                    st.success(f"Infection pressure found: {auto_ln_smp:.4f}")
+                if lat is not None and lon is not None:
+                    ts = cached_get_infection_pressure(lat, lon, year)
+                    pressure = get_pressure_for_week(ts, week)
+                    if pressure is not None:
+                        auto_ln_smp = np.log(pressure + 1)
+                        st.success(f"Infection pressure found: {auto_ln_smp:.4f}")
+                    else:
+                        st.error(f"No infection pressure data found for {selected_farm} in week {week}, {year}.")
                 else:
-                    st.error(f"No infection pressure data found for {selected_farm} in week {week}, {year}.")
+                    st.error(f"Could not parse valid coordinates for {selected_farm} from the HI database.")
             else:
                 st.error("Could not find site in HI database.")
 

@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE_URL = "https://www.hi.no/forskning/marine-data-forskningsdata/lakseluskart"
 
@@ -51,7 +51,8 @@ def parse_wkt_point(wkt):
     try:
         parts = wkt.replace("POINT(", "").replace(")", "").split()
         return float(parts[1]), float(parts[0]) # lat, lon
-    except:
+    except Exception as e:
+        print(f"Error parsing WKT point: {e}")
         return None, None
 
 def get_pressure_for_week(timeseries, week):
@@ -62,12 +63,10 @@ def get_pressure_for_week(timeseries, week):
     if not timeseries:
         return None
 
-    # Sort by timestamp just in case
-    # Convert timestamp to week number
+    # Convert timestamp to week number using UTC to avoid timezone shifts
     for entry in timeseries:
         ts = entry[0] / 1000 # to seconds
-        dt = datetime.fromtimestamp(ts)
-        # dt.isocalendar().week
+        dt = datetime.fromtimestamp(ts, tz=timezone.utc)
         if dt.isocalendar()[1] == week:
             return entry[1]
     return None
