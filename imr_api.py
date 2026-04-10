@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 from datetime import datetime
 
 BASE_URL = "https://www.hi.no/forskning/marine-data-forskningsdata/lakseluskart"

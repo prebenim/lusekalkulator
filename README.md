@@ -56,7 +56,8 @@ The application has been migrated to a modern Python stack to improve maintainab
 
 ### Structure
 - `logic.py`: Contains the core mathematical models (`count_hele`, `zero_merd`, etc.) and the simulation engine. It implements the Zero-Inflated Negative Binomial logic.
-- `main.py`: The entry point for the Streamlit application. Manages user inputs, file uploads, and coordinates the simulation and visualization.
+- `imr_api.py`: Client for the Institute of Marine Research (HI/IMR) API. Used for searching farm locations and fetching live infection pressure data.
+- `main.py`: The entry point for the Streamlit application. Manages user inputs, coordinates the API data fetching, simulation, and visualization.
 - `requirements.txt`: Lists all necessary Python packages.
 
 ### How to Run
